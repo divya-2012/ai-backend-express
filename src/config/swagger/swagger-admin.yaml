@@ -1,0 +1,47 @@
+swagger: '2.0'
+info:
+  title: Admin Dashboard MicroService
+  version: 1.0.0
+  basePath: /v1/
+  contact:
+    email: venkatesangunaraj@gmail.com
+  servers:
+    - description: This is a Local server
+      url: http://localhost:8001/v1
+  x-logo:
+    altText: Custom Label
+    url: https://example.com/path-to-your-logo.png
+
+basePath: /v1
+
+paths:
+  
+
+securityDefinitions:
+  BearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+security:
+  - BearerAuth: []
+
+tags:
+  - description: Endpoints related to Admin Authentication
+    name: Admin Auth
+
+schemes:
+  - 'http'
+
+definitions:
+  CmsUser:
+    type: object
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+        enum: [SUPER_ADMIN, ADMIN, PRODUCT_ADMIN]
