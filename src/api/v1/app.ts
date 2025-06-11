@@ -150,7 +150,7 @@ const createApp = async (): Promise<Express> => {
   // Basic health check route
   app.get("/", (_req: Request, res: Response) => {
     res.json({
-      message: "Market On StreetMall API-V1 Working",
+      message: "Test API-V1 Working",
       status: "healthy",
       timestamp: new Date().toISOString()
     });
@@ -158,7 +158,7 @@ const createApp = async (): Promise<Express> => {
 
   app.get("/health", (_req: Request, res: Response) => {
     res.json({
-      message: "Market On StreetMallAPI-V1 Working",
+      message: "Test API-V1 Working",
       status: "healthy",
       timestamp: new Date().toISOString()
     });

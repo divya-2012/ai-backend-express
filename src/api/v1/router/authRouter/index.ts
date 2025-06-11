@@ -12,6 +12,7 @@ authRouter.post('/forgot-password', AuthController.requestReset);
 authRouter.post('/reset-password', AuthController.resetPassword);
 authRouter.post('/logout', AuthController.logout);
 
+authRouter.post('/test', AuthController.register);
 // Protected routes
 authRouter.get('/me', authenticateToken, AuthController.me);
 
