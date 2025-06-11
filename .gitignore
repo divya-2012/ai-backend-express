@@ -1,6 +1,7 @@
 node_modules
 .env
-
+.git
+dist
 # Sentry Config File
 .sentryclirc
 

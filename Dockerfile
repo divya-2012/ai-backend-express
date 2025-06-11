@@ -1,13 +1,22 @@
-
 # Stage 1: Build the application
 FROM node:18 AS build
 
 WORKDIR /app
 
-COPY package*.json prisma ./
-RUN npm install --only=production
+# First copy package files for dependency installation
+COPY package*.json ./
+COPY prisma ./prisma
+
+# Install ALL dependencies (including devDependencies) for building
+RUN npm install
+
+# Generate Prisma client
 RUN npx prisma generate
+
+# Copy all other files
 COPY . .
+
+# Run the build
 RUN npm run build
 
 # Stage 2: Create a minimal production image
@@ -20,6 +29,7 @@ RUN apk add --no-cache curl && \
 
 WORKDIR /app
 
+# Copy only production files from build stage
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package*.json ./
