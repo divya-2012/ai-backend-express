@@ -41,4 +41,4 @@ EXPOSE 8001
 ENV NODE_ENV=production
 
 # Run database migrations and start the application
-CMD ["sh", "-c", "node dist/src/server.js"]
+CMD ["node", "dist/src/server.js"]
