@@ -1,42 +1,43 @@
 # Stage 1: Build the application
 FROM node:18 AS build
 
+# Set the working directory inside the container
 WORKDIR /app
 
-# First copy package files for dependency installation
-COPY package*.json ./
-COPY prisma ./prisma
+# Copy package.json, package-lock.json, and Prisma schema for dependency installation
+COPY package*.json prisma ./
 
-# Install ALL dependencies (including devDependencies) for building
-RUN npm install
+RUN npm install --only=production
 
-# Generate Prisma client
+# Generate the Prisma client
 RUN npx prisma generate
 
-# Copy all other files
+# Copy the rest of the application code
 COPY . .
 
-# Run the build
+# Build the TypeScript code
 RUN npm run build
 
 # Stage 2: Create a minimal production image
 FROM node:18-alpine
 
-# Install curl and dockerize
-RUN apk add --no-cache curl && \
-  curl -L https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz \
-  | tar -C /usr/local/bin -xz
+# Install minimal tools required for the application
+RUN apk add --no-cache curl
 
+# Set the working directory
 WORKDIR /app
 
-# Copy only production files from build stage
+# Copy only the necessary files from the build stage
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package*.json ./
 COPY --from=build /app/prisma ./prisma
 
+# Expose the port the app will run on
 EXPOSE 8001
 
+# Set environment variable for production
 ENV NODE_ENV=production
 
-CMD ["sh", "-c", "dockerize -wait tcp://db:3306 -timeout 30s && npx prisma migrate deploy && node dist/src/server.js"]
+# Run database migrations and start the application
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/server.js"]
