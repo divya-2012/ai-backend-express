@@ -7,8 +7,7 @@ WORKDIR /app
 # Copy package.json, package-lock.json, and Prisma schema for dependency installation
 COPY package*.json prisma ./
 
-# Install production dependencies
-RUN npm install --only=production
+RUN npm install 
 
 # Generate the Prisma client
 RUN npx prisma generate
