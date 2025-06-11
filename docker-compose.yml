@@ -29,11 +29,10 @@ services:
       NODE_ENV: production
       DIRECT_DB_CONNECTION: mysql://root:Qwer1234@@db:3306/new_db
     command: >
-      sh -c "
-        npx prisma generate &&
-        npx prisma migrate deploy &&
-        node dist/src/server.js
-      "
+      dockerize -wait tcp://db:3306 -timeout 30s &&
+      npx prisma migrate deploy &&
+      node dist/src/server.js
+
 
 networks:
   backend:
